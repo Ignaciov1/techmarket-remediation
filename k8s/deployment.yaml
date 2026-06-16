@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: orders-api
-        image: nginx:latest  # Esta es nuestra imagen sana
+        image: nginx:version-rota-fatal
         ports:
         - containerPort: 80

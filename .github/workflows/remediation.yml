@@ -1,0 +1,42 @@
+name: CI/CD Remediation Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'k8s/**'
+      - '.github/workflows/**'
+
+jobs:
+  deploy-and-remediate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout del código
+        uses: actions/checkout@v3
+
+      - name: 🔐 Configurar Credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: ☸️ Configurar Contexto de Kubernetes
+        run: aws eks update-kubeconfig --name techmarket-cluster --region ${{ secrets.AWS_REGION }}
+
+      - name: 🚀 Fase de Despliegue Automatizado
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+
+      - name: 🔍 Fase de Verificación Post-Deploy (Smoke Test)
+        id: smoke_test
+        run: |
+          kubectl rollout status deployment/techmarket-orders-api --timeout=60s
+
+      - name: ⚠️ Reversión Automática en Caso de Fallo (Rollback)
+        if: failure()
+        run: |
+          echo "¡Alerta! Falló la verificación post-deploy. Iniciando Rollback automático..."
+          kubectl rollout undo deployment/techmarket-orders-api
+          echo "Rollback completado. El servicio ha regresado a su estado seguro."

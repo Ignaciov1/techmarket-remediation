@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techmarket-orders-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: techmarket-orders-api
+  template:
+    metadata:
+      labels:
+        app: techmarket-orders-api
+    spec:
+      containers:
+      - name: orders-api
+        image: nginx:latest  # Esta es nuestra imagen sana
+        ports:
+        - containerPort: 80

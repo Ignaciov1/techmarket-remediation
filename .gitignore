@@ -1,0 +1,22 @@
+# ========================
+# Terraform
+# ========================
+# Ignorar el directorio local oculto de Terraform (pesado)
+**/.terraform/*
+
+# Ignorar archivos de estado (¡SÚPER SENSIBLES!)
+*.tfstate
+*.tfstate.*
+
+# Ignorar archivos de bloqueo de estado
+.terraform.tfstate.lock.info
+
+# Opcional: ignorar variables locales si las tuvieras
+*.tfvars
+*.tfvars.json
+
+# ========================
+# SO y Editores
+# ========================
+.DS_Store
+.vscode/

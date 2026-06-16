@@ -27,7 +27,7 @@ jobs:
 
       - name: 🚀 Fase de Despliegue Automatizado
         run: |
-          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/
 
       - name: 🔍 Fase de Verificación Post-Deploy (Smoke Test)
         id: smoke_test
